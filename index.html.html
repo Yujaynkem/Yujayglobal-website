@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YujayGlobal | Luxury Gele Artist</title>
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+color:#fff;
+background:linear-gradient(rgba(0,0,0,0.9),rgba(0,0,0,0.9)), url('logo.png');
+background-size:contain;
+background-repeat:no-repeat;
+background-position:center;
+}
+
+/* NAV */
+nav{display:flex;justify-content:space-between;padding:20px}
+a{color:#fff;margin-left:15px;text-decoration:none}
+
+/* HERO */
+.hero{
+text-align:center;
+padding:80px 20px;
+}
+.hero img{
+width:220px;
+border-radius:50%;
+margin-bottom:20px;
+}
+h1{color:#F7E7CE}
+
+/* GRID */
+.grid{display:grid;gap:20px}
+@media(min-width:768px){
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+}
+
+/* CARD */
+.card{
+background:#0d0d0d;
+padding:20px;
+border-radius:15px;
+}
+
+/* BUTTON */
+.btn{
+background:#800020;
+padding:10px;
+border:none;
+color:#fff;
+cursor:pointer;
+margin-top:10px;
+}
+
+/* CART POPUP */
+#cartPopup{
+position:fixed;
+top:0;
+right:-400px;
+width:300px;
+height:100%;
+background:#111;
+padding:20px;
+transition:0.3s;
+overflow:auto;
+}
+#cartPopup.active{right:0}
+
+/* INPUT */
+input,select{
+width:100%;
+padding:8px;
+margin-top:8px;
+border-radius:6px;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<img src="logo.png" height="50">
+<div>
+<a href="#shop">Shop</a>
+<a href="#booking">Book</a>
+<a href="#" onclick="toggleCart()">Cart 🛒</a>
+</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+<img src="/mnt/data/IG Profile pic.jpg">
+<h1>Luxury Gele Experience</h1>
+<p>For Brides Who Refuse To Look Ordinary</p>
+</section>
+
+<!-- SHOP -->
+<section id="shop">
+<h2>AutoGele Collection</h2>
+
+<div class="grid grid-3">
+
+<div class="card">
+<h3>Imperial Infinity Pleats</h3>
+<p>₦20,000</p>
+<button class="btn" onclick="addToCart('Imperial Infinity Pleats',20000)">Add to Cart</button>
+<button class="btn" onclick="addWishlist('Imperial Infinity Pleats')">♡ Wishlist</button>
+</div>
+
+<div class="card">
+<h3>Rose Royale Infinity Wrap</h3>
+<p>₦25,000</p>
+<button class="btn" onclick="addToCart('Rose Royale Infinity Wrap',25000)">Add to Cart</button>
+<button class="btn" onclick="addWishlist('Rose Royale Infinity Wrap')">♡ Wishlist</button>
+</div>
+
+<div class="card">
+<h3>Bridal Crown Signature</h3>
+<p>₦30,000</p>
+<button class="btn" onclick="addToCart('Bridal Crown Signature',30000)">Add to Cart</button>
+<button class="btn" onclick="addWishlist('Bridal Crown Signature')">♡ Wishlist</button>
+</div>
+
+</div>
+</section>
+
+<!-- CART -->
+<div id="cartPopup">
+<h3>Your Cart</h3>
+<div id="cartItems"></div>
+<h4 id="total"></h4>
+<button class="btn" onclick="checkout()">Checkout</button>
+</div>
+
+<!-- BOOKING -->
+<section id="booking">
+<h2>Book Service</h2>
+
+<input id="email" placeholder="Email">
+<select id="service">
+<option value="18000">Bride</option>
+<option value="12000">Mother</option>
+<option value="8000">Guest</option>
+</select>
+
+<input id="qty" type="number" placeholder="Number of People">
+
+<button class="btn" onclick="payBooking()">Pay 40% Deposit</button>
+</section>
+
+<script>
+let cart=[];
+
+/* CART FUNCTIONS */
+function toggleCart(){
+document.getElementById('cartPopup').classList.toggle('active');
+}
+
+function addToCart(name,price){
+cart.push({name,price});
+updateCart();
+}
+
+function updateCart(){
+let html='';
+let total=0;
+
+cart.forEach(item=>{
+html+=`<p>${item.name} - ₦${item.price}</p>`;
+total+=item.price;
+});
+
+/* BULK DISCOUNT */
+if(cart.length>=5){
+total = total * 0.85;
+}
+
+document.getElementById('cartItems').innerHTML=html;
+document.getElementById('total').innerText="Total: ₦"+total;
+}
+
+function checkout(){
+let totalText=document.getElementById('total').innerText;
+let total=parseInt(totalText.replace(/[^0-9]/g,''));
+let orderID='YUJAY-'+Math.floor(Math.random()*1000000);
+
+let handler=PaystackPop.setup({
+key:'YOUR_PUBLIC_KEY_HERE',
+email:'customer@email.com',
+amount:total*100,
+callback:function(){
+let msg=`Order ID: ${orderID}%0ATotal: ₦${total}`;
+window.open(`https://wa.me/2348109000638?text=${msg}`);
+}
+});
+handler.openIframe();
+}
+
+/* WISHLIST */
+function addWishlist(item){
+alert(item+" added to wishlist ❤️");
+}
+
+/* BOOKING */
+function payBooking(){
+let email=document.getElementById('email').value;
+let service=document.getElementById('service').value;
+let qty=document.getElementById('qty').value||1;
+
+let total=service*qty;
+let deposit=total*0.4;
+
+let handler=PaystackPop.setup({
+key:'YOUR_PUBLIC_KEY_HERE',
+email:email,
+amount:deposit*100,
+callback:function(){
+alert('Booking confirmed!');
+}
+});
+handler.openIframe();
+}
+</script>
+
+</body>
+</html>
