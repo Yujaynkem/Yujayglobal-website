@@ -12,7 +12,7 @@ body{
 margin:0;
 font-family:Arial;
 color:#fff;
-background:linear-gradient(rgba(0,0,0,0.9),rgba(0,0,0,0.9)), url('logo.png');
+background:linear-gradient(rgba(37,2,2,0.9),rgba(83,5,5,0.9)), url('logo.png');
 background-size:contain;
 background-repeat:no-repeat;
 background-position:center;
@@ -127,6 +127,25 @@ border-radius:6px;
 <button class="btn" onclick="addWishlist('Bridal Crown Signature')">♡ Wishlist</button>
 </div>
 
+<!-- VERIFIED REVIEWS -->
+<div style="margin-top:60px; padding:20px">
+<h3>Verified Buyers Reviews</h3>
+
+<div class="grid grid-2">
+
+<div class="card">
+<p>"It was beautiful 😍 and exactly what I wanted"</p>
+<p>✔ Verified Purchase</p>
+</div>
+
+<div class="card">
+<p>"Perfect finishing and very durable"</p>
+<p>✔ Verified Purchase</p>
+</div>
+
+</div>
+</div>
+
 </div>
 </section>
 
@@ -152,6 +171,35 @@ border-radius:6px;
 <input id="qty" type="number" placeholder="Number of People">
 
 <button class="btn" onclick="payBooking()">Pay 40% Deposit</button>
+</section>
+
+<!-- GENERAL REVIEWS -->
+<section id="reviews">
+<h2>What Clients Say</h2>
+
+<div class="grid grid-2">
+
+<div class="card">
+<p>"I needed my gele urgently and she delivered perfectly. It's been 2 years and still looks new."</p>
+<p>⭐⭐⭐⭐⭐ - Lucky God'sblessing D.</p>
+</div>
+
+<div class="card">
+<p>"Exceptional quality and on-time delivery. Highly recommended!"</p>
+<p>⭐⭐⭐⭐⭐ - Blessing Adaidu</p>
+</div>
+
+<div class="card">
+<p>"Thank you for contributing to me looking good 😊❤️"</p>
+<p>⭐⭐⭐⭐⭐ - WhatsApp Client</p>
+</div>
+
+<div class="card">
+<p>"It's beautiful, thanks so much!"</p>
+<p>⭐⭐⭐⭐⭐ - WhatsApp Client</p>
+</div>
+
+</div>
 </section>
 
 <script>
@@ -191,7 +239,7 @@ let total=parseInt(totalText.replace(/[^0-9]/g,''));
 let orderID='YUJAY-'+Math.floor(Math.random()*1000000);
 
 let handler=PaystackPop.setup({
-key:'YOUR_PUBLIC_KEY_HERE',
+key:'pk_test_dd359cd0443fe7a61cbda1da3a94e31aa6e22fda',
 email:'customer@email.com',
 amount:total*100,
 callback:function(){
@@ -217,7 +265,7 @@ let total=service*qty;
 let deposit=total*0.4;
 
 let handler=PaystackPop.setup({
-key:'YOUR_PUBLIC_KEY_HERE',
+key:'pk_test_dd359cd0443fe7a61cbda1da3a94e31aa6e22fda',
 email:email,
 amount:deposit*100,
 callback:function(){
