@@ -17,10 +17,22 @@ background-size:contain;
 background-repeat:no-repeat;
 background-position:center;
 }
+*{
+box-sizing:border-box;
+}
+
+html, body{
+margin:0;
+padding:0;
+overflow-x:hidden;
+max-width:100%;
+}
 
 /* NAV */
-nav{display:flex;justify-content:space-between;padding:20px}
+nav{display:flex;justify-content:space-between;align-items:center;padding:20px;flex-wrap:nowrap}
 a{color:#fff;margin-left:15px;text-decoration:none}
+
+
 
 /* HERO */
 .hero{
@@ -36,10 +48,23 @@ h1{color:#F7E7CE}
 
 /* GRID */
 .grid{display:grid;gap:20px}
+
+.product-grid{
+width:100%;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:20px;
+}
+
 @media(min-width:768px){
-.grid-3{grid-template-columns:repeat(3,1fr)}
 .grid-2{grid-template-columns:repeat(2,1fr)}
 }
+
+.section{
+width:100%;
+display:block;
+}
+
 
 /* CARD */
 .card{
@@ -79,6 +104,11 @@ padding:8px;
 margin-top:8px;
 border-radius:6px;
 }
+.section{
+padding:60px 15px;
+max-width:1200px;
+margin:auto;
+}
 </style>
 </head>
 
@@ -104,7 +134,7 @@ border-radius:6px;
 <section id="shop">
 <h2>AutoGele Collection</h2>
 
-<div class="grid grid-3">
+<div class="product-grid">
 
 <div class="card">
 <h3>Imperial Infinity Pleats</h3>
@@ -127,8 +157,10 @@ border-radius:6px;
 <button class="btn" onclick="addWishlist('Bridal Crown Signature')">♡ Wishlist</button>
 </div>
 
+</div> <!-- ✅ CLOSE product-grid HERE -->
+
 <!-- VERIFIED REVIEWS -->
-<div style="margin-top:60px; padding:20px">
+<div style="margin-top:60px; padding:20px;">
 <h3>Verified Buyers Reviews</h3>
 
 <div class="grid grid-2">
@@ -146,7 +178,6 @@ border-radius:6px;
 </div>
 </div>
 
-</div>
 </section>
 
 <!-- CART -->
@@ -209,6 +240,8 @@ let cart=[];
 function toggleCart(){
 document.getElementById('cartPopup').classList.toggle('active');
 }
+
+
 
 function addToCart(name,price){
 cart.push({name,price});
