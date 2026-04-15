@@ -12,7 +12,7 @@ body{
 margin:0;
 font-family:Arial;
 color:#fff;
-background:linear-gradient(rgba(37,2,2,0.9),rgba(83,5,5,0.9)), url('logo.png');
+background:linear-gradient(rgba(46, 2, 2, 0.9),rgb(83, 8, 5,0.9)), url('logo.png');
 background-size:contain;
 background-repeat:no-repeat;
 background-position:center;
@@ -20,6 +20,7 @@ background-position:center;
 *{
 box-sizing:border-box;
 }
+
 
 html, body{
 margin:0;
@@ -46,6 +47,36 @@ margin-bottom:20px;
 }
 h1{color:#F7E7CE}
 
+
+.hero{
+height:150vh;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+
+background:
+linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.85)),
+url('IG Profile pic.jpg');
+
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+}
+
+.hero-content h1{
+font-size:52px;
+letter-spacing:3px;
+color:#F7E7CE;
+}
+
+.hero-content p{
+margin:10px 0 20px;
+font-size:18px;
+opacity:0.8;
+}
+
+
 /* GRID */
 .grid{display:grid;gap:20px}
 
@@ -65,6 +96,47 @@ width:100%;
 display:block;
 }
 
+.customize-box{
+display:none;
+background:#111;
+padding:10px;
+margin-top:10px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,0.1);
+}
+
+.option{
+display:flex;
+align-items:center;
+gap:8px;
+margin-top:10px;
+font-size:14px;
+}
+
+.option input{
+margin:0;
+}
+
+.collection-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+margin-top:30px;
+}
+
+.collection-card{
+background:#0d0d0d;
+padding:30px;
+text-align:center;
+border-radius:15px;
+border:1px solid rgba(255,255,255,0.05);
+transition:0.3s;
+}
+
+.collection-card:hover{
+transform:translateY(-5px);
+box-shadow:0 10px 25px rgba(0,0,0,0.6);
+}
 
 /* CARD */
 .card{
@@ -96,6 +168,9 @@ transition:0.3s;
 overflow:auto;
 }
 #cartPopup.active{right:0}
+#cartPopup h3{
+margin-top:10px;
+}
 
 /* INPUT */
 input,select{
@@ -117,92 +192,75 @@ margin:auto;
 <nav>
 <img src="logo.png" height="50">
 <div>
-<a href="#shop">Shop</a>
-<a href="#booking">Book</a>
+<a href="shop.html">Shop</a>
+<a href="booking.html">Book</a>
 <a href="#" onclick="toggleCart()">Cart 🛒</a>
 </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-<img src="IG Profile pic.jpg">
-<h1>Luxury Gele Experience</h1>
-<p>For Brides Who Refuse To Look Ordinary</p>
-</section>
 
-<!-- SHOP -->
-<section id="shop">
-<h2>AutoGele Collection</h2>
+<div class="hero-content">
+<h1>YujayGlobal</h1>
+<p>Crafting Luxury Gele for Queens</p>
 
-<div class="product-grid">
-
-<div class="card">
-<h3>Imperial Infinity Pleats</h3>
-<p>₦20,000</p>
-<button class="btn" onclick="addToCart('Imperial Infinity Pleats',20000)">Add to Cart</button>
-<button class="btn" onclick="addWishlist('Imperial Infinity Pleats')">♡ Wishlist</button>
-</div>
-
-<div class="card">
-<h3>Rose Royale Infinity Wrap</h3>
-<p>₦25,000</p>
-<button class="btn" onclick="addToCart('Rose Royale Infinity Wrap',25000)">Add to Cart</button>
-<button class="btn" onclick="addWishlist('Rose Royale Infinity Wrap')">♡ Wishlist</button>
-</div>
-
-<div class="card">
-<h3>Bridal Crown Signature</h3>
-<p>₦30,000</p>
-<button class="btn" onclick="addToCart('Bridal Crown Signature',30000)">Add to Cart</button>
-<button class="btn" onclick="addWishlist('Bridal Crown Signature')">♡ Wishlist</button>
-</div>
-
-</div> <!-- ✅ CLOSE product-grid HERE -->
-
-<!-- VERIFIED REVIEWS -->
-<div style="margin-top:60px; padding:20px;">
-<h3>Verified Buyers Reviews</h3>
-
-<div class="grid grid-2">
-
-<div class="card">
-<p>"It was beautiful 😍 and exactly what I wanted"</p>
-<p>✔ Verified Purchase</p>
-</div>
-
-<div class="card">
-<p>"Perfect finishing and very durable"</p>
-<p>✔ Verified Purchase</p>
-</div>
-
-</div>
+<button class="btn" onclick="location.href='shop.html'">Explore Collection</button>
 </div>
 
 </section>
+
+<section class="section">
+
+<h2 style="text-align:center;">Our Collections</h2>
+
+<div class="collection-grid">
+
+<div class="collection-card">
+<h3>Bridal Gele</h3>
+<p>Luxury styles for brides</p>
+</div>
+
+<div class="collection-card">
+<h3>Ready-to-Wear</h3>
+<p>Quick elegance for events</p>
+</div>
+
+<div class="collection-card">
+<h3>Custom AutoGele</h3>
+<p>Designed to your taste</p>
+</div>
+
+</div>
+
+
 
 <!-- CART -->
 <div id="cartPopup">
-<h3>Your Cart</h3>
-<div id="cartItems"></div>
-<h4 id="total"></h4>
-<button class="btn" onclick="checkout()">Checkout</button>
+
+<button onclick="toggleCart()" 
+style="float:right;background:none;border:none;color:#994e4e;font-size:20px;cursor:pointer;">
+✖
+</button>
+
+<div class="tabs">
+<button onclick="showCart()">Cart</button>
+<button onclick="showWishlist()">Wishlist</button>
 </div>
 
-<!-- BOOKING -->
-<section id="booking">
-<h2>Book Service</h2>
+<div id="cartSection">
+<h3>Your Cart</h3>
+<div id="cartItems"></div>
+<div id="total"></div>
+<button onclick="checkout()">Checkout</button>
+</div>
 
-<input id="email" placeholder="Email">
-<select id="service">
-<option value="18000">Bride</option>
-<option value="12000">Mother</option>
-<option value="8000">Guest</option>
-</select>
+<div id="wishlistSection" style="display:none;">
+<h3>Your Wishlist</h3>
+<div id="wishlistItems"></div>
+</div>
 
-<input id="qty" type="number" placeholder="Number of People">
-
-<button class="btn" onclick="payBooking()">Pay 40% Deposit</button>
-</section>
+</div>
 
 <!-- GENERAL REVIEWS -->
 <section id="reviews">
@@ -234,41 +292,90 @@ margin:auto;
 </section>
 
 <script>
-let cart=[];
+let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-/* CART FUNCTIONS */
+document.addEventListener("DOMContentLoaded", function(){
+updateCart();
+});
+
+/* CART TOGGLE */
 function toggleCart(){
 document.getElementById('cartPopup').classList.toggle('active');
 }
 
-
-
+/* ADD TO CART */
 function addToCart(name,price){
 cart.push({name,price});
 updateCart();
 }
 
-function updateCart(){
-let html='';
-let total=0;
 
-cart.forEach(item=>{
-html+=`<p>${item.name} - ₦${item.price}</p>`;
-total+=item.price;
+/* REMOVE ITEM */
+function removeItem(index){
+cart.splice(index,1);
+updateCart();
+}
+
+/* UPDATE CART */
+function updateCart(){
+
+let html = '';
+let total = 0;
+
+cart.forEach((item, index)=>{
+
+html += `
+<p>
+<strong>${item.name}</strong> - ₦${item.price}<br>
+<small>
+Color: ${item.color || "None"} <br>
+Shawl: ${item.shawl ? "Yes" : "No"} <br>
+Cap: ${item.cap ? "Yes" : "No"}
+</small>
+<br>
+<button onclick="removeItem(${index})">❌ Remove</button>
+</p>
+`;
+
+total += item.price;
+
 });
 
-/* BULK DISCOUNT */
-if(cart.length>=5){
+
+/* DISCOUNT */
+let discount = 0;
+
+if(cart.length >= 5){
+discount = total * 0.15;
+}
+
+let finalTotal = total - discount;
+
+/* DISPLAY */
+document.getElementById('cartItems').innerHTML = html;
+
+document.getElementById('total').innerHTML = `
+Subtotal: ₦${total}<br>
+Discount: ₦${discount}<br>
+<strong>Total: ₦${finalTotal}</strong>
+`;
+
+/* SAVE (VERY IMPORTANT) */
+localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+/* CHECKOUT */
+function checkout(){
+let total = 0;
+
+cart.forEach(item=>{
+total += item.price;
+});
+
+if(cart.length >= 5){
 total = total * 0.85;
 }
-
-document.getElementById('cartItems').innerHTML=html;
-document.getElementById('total').innerText="Total: ₦"+total;
-}
-
-function checkout(){
-let totalText=document.getElementById('total').innerText;
-let total=parseInt(totalText.replace(/[^0-9]/g,''));
 let orderID='YUJAY-'+Math.floor(Math.random()*1000000);
 
 let handler=PaystackPop.setup({
@@ -284,29 +391,68 @@ handler.openIframe();
 }
 
 /* WISHLIST */
-function addWishlist(item){
-alert(item+" added to wishlist ❤️");
+function addWishlist(name){
+wishlist.push(name);
+localStorage.setItem("wishlist", JSON.stringify(wishlist));
+showPopup(name + " added to wishlist ❤️");
+updateWishlist();
 }
 
-/* BOOKING */
-function payBooking(){
-let email=document.getElementById('email').value;
-let service=document.getElementById('service').value;
-let qty=document.getElementById('qty').value||1;
-
-let total=service*qty;
-let deposit=total*0.4;
-
-let handler=PaystackPop.setup({
-key:'pk_test_dd359cd0443fe7a61cbda1da3a94e31aa6e22fda',
-email:email,
-amount:deposit*100,
-callback:function(){
-alert('Booking confirmed!');
+function showCart(){
+document.getElementById('cartSection').style.display = "block";
+document.getElementById('wishlistSection').style.display = "none";
 }
+
+function showWishlist(){
+document.getElementById('cartSection').style.display = "none";
+document.getElementById('wishlistSection').style.display = "block";
+}
+
+function updateWishlist(){
+
+let html = "";
+
+wishlist.forEach((item, index)=>{
+html += `
+<p>
+${item}
+<br>
+<button onclick="moveToCart(${index})">Move to Cart 🛒</button>
+<button onclick="removeWishlist(${index})">❌ Remove</button>
+</p>
+`;
 });
-handler.openIframe();
+
+document.getElementById('wishlistItems').innerHTML = html;
+
+localStorage.setItem("wishlist", JSON.stringify(wishlist));
 }
+
+function moveToCart(index){
+
+let item = wishlist[index];
+
+cart.push({
+name:item,
+price:20000 // default (we'll improve later)
+});
+
+wishlist.splice(index,1);
+
+updateCart();
+updateWishlist();
+}  
+
+function removeWishlist(index){
+wishlist.splice(index,1);
+updateWishlist();
+}
+
+window.onload = function(){
+updateCart();
+updateWishlist();
+}
+
 </script>
 
 </body>
