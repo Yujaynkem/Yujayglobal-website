@@ -163,6 +163,26 @@ overflow:auto;
 margin-top:10px;
 }
 
+.tabs{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+}
+
+.tabs button{
+flex:1;
+padding:10px;
+border:none;
+cursor:pointer;
+background:#111;
+color:#fff;
+border-radius:8px;
+}
+
+.tabs button.activeTab{
+background:#800020;
+}
+
 /* INPUT */
 input,select{
 width:100%;
@@ -183,7 +203,7 @@ margin:auto;
 <nav>
 <img src="logo.png" height="50">
 <div>
-<a href="index.html.html">Home</a>
+<a href="index.html">Home</a>
 <a href="shop.html">Shop</a>
 <a href="#" onclick="toggleCart()">Cart 🛒</a>
 </div>
@@ -216,23 +236,27 @@ style="float:right;background:none;border:none;color:#994e4e;font-size:20px;curs
 </button>
 
 <div class="tabs">
-<button onclick="showCart()">Cart</button>
-<button onclick="showWishlist()">Wishlist</button>
+<button onclick="showWishlist()" class="activeTab" id="wishlistTab">Wishlist ❤️</button>
+<button onclick="showCart()" id="cartTab">Cart 🛒</button>
 </div>
 
-<div id="cartSection">
+<!-- WISHLIST FIRST -->
+<div id="wishlistSection">
+<h3 style="font-weight:bold;">Wishlist ❤️</h3>
+<div id="wishlistItems"></div>
+</div>
+
+<!-- CART -->
+<div id="cartSection" style="display:none;">
 <h3>Your Cart</h3>
 <div id="cartItems"></div>
 <div id="total"></div>
 <button onclick="checkout()">Checkout</button>
 </div>
 
-<div id="wishlistSection" style="display:none;">
-<h3>Your Wishlist</h3>
-<div id="wishlistItems"></div>
+</div>
 </div>
 
-</div>
 
 
 <!-- GENERAL REVIEWS -->
@@ -268,11 +292,15 @@ style="float:right;background:none;border:none;color:#994e4e;font-size:20px;curs
 let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
+/* RUN ON PAGE LOAD */
 document.addEventListener("DOMContentLoaded", function(){
 updateCart();
+updateWishlist();
 });
 
-/* CART TOGGLE */
+/* ================= CART ================= */
+
+/* TOGGLE CART */
 function toggleCart(){
 document.getElementById('cartPopup').classList.toggle('active');
 }
@@ -289,8 +317,6 @@ cap: false
 });
 
 updateCart();
-
-/* ✅ ADD THIS LINE */
 showPopup(name + " added to cart 🛒");
 }
 
@@ -327,7 +353,6 @@ total += item.price;
 
 /* DISCOUNT */
 let discount = 0;
-
 if(cart.length >= 5){
 discount = total * 0.15;
 }
@@ -343,12 +368,13 @@ Discount: ₦${discount}<br>
 <strong>Total: ₦${finalTotal}</strong>
 `;
 
-/* SAVE (VERY IMPORTANT) */
+/* SAVE */
 localStorage.setItem("cart", JSON.stringify(cart));
 }
 
 /* CHECKOUT */
 function checkout(){
+
 let total = 0;
 
 cart.forEach(item=>{
@@ -358,6 +384,7 @@ total += item.price;
 if(cart.length >= 5){
 total = total * 0.85;
 }
+
 let orderID='YUJAY-'+Math.floor(Math.random()*1000000);
 
 let handler=PaystackPop.setup({
@@ -369,25 +396,17 @@ let msg=`Order ID: ${orderID}%0ATotal: ₦${total}`;
 window.open(`https://wa.me/2348109000638?text=${msg}`);
 }
 });
+
 handler.openIframe();
 }
 
-/* WISHLIST */
+/* ================= WISHLIST ================= */
+
 function addWishlist(name){
 wishlist.push(name);
 localStorage.setItem("wishlist", JSON.stringify(wishlist));
-showPopup(name + " added to wishlist ❤️");
 updateWishlist();
-}
-
-function showCart(){
-document.getElementById('cartSection').style.display = "block";
-document.getElementById('wishlistSection').style.display = "none";
-}
-
-function showWishlist(){
-document.getElementById('cartSection').style.display = "none";
-document.getElementById('wishlistSection').style.display = "block";
+showPopup(name + " added to wishlist ❤️");
 }
 
 function updateWishlist(){
@@ -400,7 +419,6 @@ html += `
 ${item}
 <br>
 <button onclick="moveToCart(${index})">Move to Cart 🛒</button>
-
 <button onclick="removeWishlist(${index})">❌ Remove</button>
 </p>
 `;
@@ -408,6 +426,7 @@ ${item}
 
 document.getElementById('wishlistItems').innerHTML = html;
 
+/* SAVE AGAIN */
 localStorage.setItem("wishlist", JSON.stringify(wishlist));
 }
 
@@ -417,38 +436,55 @@ let item = wishlist[index];
 
 cart.push({
 name:item,
-price:20000 // default (we'll improve later)
+price:20000
 });
 
 wishlist.splice(index,1);
 
 updateCart();
 updateWishlist();
-} 
+showPopup(item + " moved to cart 🛒");
+}
+
 function removeWishlist(index){
 wishlist.splice(index,1);
 updateWishlist();
 }
 
-window.onload = function(){
-updateCart();
-updateWishlist();
+function showWishlist(){
+
+document.getElementById('wishlistSection').style.display = "block";
+document.getElementById('cartSection').style.display = "none";
+
+document.getElementById('wishlistTab').classList.add("activeTab");
+document.getElementById('cartTab').classList.remove("activeTab");
 }
 
-function showPopup(text){
+function showCart(){
+
+document.getElementById('wishlistSection').style.display = "none";
+document.getElementById('cartSection').style.display = "block";
+
+document.getElementById('cartTab').classList.add("activeTab");
+document.getElementById('wishlistTab').classList.remove("activeTab");
+}
+
+/* ================= POPUP ================= */
+
+function showPopup(message){
 
 let popup = document.getElementById("popup");
 
-popup.innerText = text;
-
+popup.innerText = message;
 popup.classList.add("show");
 
 setTimeout(()=>{
 popup.classList.remove("show");
-},2000);
-} 
+}, 2000);
+}
 
-/* BOOKING */
+/* ================= BOOKING ================= */
+
 function payBooking(){
 let email=document.getElementById('email').value;
 let service=document.getElementById('service').value;
@@ -465,18 +501,12 @@ callback:function(){
 alert('Booking confirmed!');
 }
 });
+
 handler.openIframe();
 }
-
-window.onload = function(){
-
-if(cart.length > 0){
-updateCart();
-}
-
-}
-
 </script>
+
+<div id="popup"></div>
 
 </body>
 </html>
