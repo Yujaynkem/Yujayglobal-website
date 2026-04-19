@@ -40,35 +40,54 @@ a{color:#fff;margin-left:15px;text-decoration:none}
 text-align:center;
 padding:80px 20px;
 }
-.hero img{
-width:220px;
-border-radius:50%;
-margin-bottom:20px;
+
+.hero-image img{
+width:100%;
+max-width:600px;
+object-fit:cover;
+
+/* ✨ FULL EDGE FADE */
+-webkit-mask-image:
+linear-gradient(to right, transparent, black 20%, black 80%, transparent),
+linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+
+-webkit-mask-composite: destination-in;
+mask-image:
+linear-gradient(to right, transparent, black 20%, black 80%, transparent),
+linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+mask-composite: intersect;
+} 
+
+.hero-image img{
+animation-delay:0.3s;
 }
-h1{color:#F7E7CE}
+
+h1{color:#d8972fc4}
+
+.hero-text{
+flex:1;
+max-width:800px;
+}
 
 
-.hero{
-height:150vh;
+
+.hero-image{
+flex:1;
 display:flex;
 justify-content:center;
+}
+
+.hero{
+display:flex;
 align-items:center;
-text-align:center;
-
-background:
-linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.85)),
-url('IG Profile pic.jpg');
-
-background-size:cover;
-background-position:center;
-background-repeat:no-repeat;
+justify-content:center;
+padding:40px;
+min-height:90vh;
+gap:30px;
+flex-wrap:wrap;
+background: linear-gradient(135deg, #300000, #000); /* or #000 if you prefer darker */
 }
 
-.hero-content h1{
-font-size:52px;
-letter-spacing:3px;
-color:#F7E7CE;
-}
 
 .hero-content p{
 margin:10px 0 20px;
@@ -76,6 +95,45 @@ font-size:18px;
 opacity:0.8;
 }
 
+@media(max-width:768px){
+.hero{
+flex-direction:column;
+text-align:center;
+}
+
+.hero-image img{
+max-width:300px;
+}
+}
+
+/* TEXT ANIMATION */
+.hero-text{
+opacity:0;
+transform:translateX(-40px);
+animation:fadeLeft 1s ease forwards;
+}
+
+/* IMAGE ANIMATION */
+.hero-image img{
+opacity:0;
+transform:translateY(40px);
+animation:fadeUp 1.2s ease forwards;
+}
+
+/* KEYFRAMES */
+@keyframes fadeLeft{
+to{
+opacity:1;
+transform:translateX(0);
+}
+}
+
+@keyframes fadeUp{
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
 
 /* GRID */
 .grid{display:grid;gap:20px}
@@ -172,6 +230,26 @@ overflow:auto;
 margin-top:10px;
 }
 
+.tabs{
+display:flex;
+gap:10px;
+margin-bottom:15px;
+}
+
+.tabs button{
+flex:1;
+padding:10px;
+border:none;
+cursor:pointer;
+background:#111;
+color:#fff;
+border-radius:8px;
+}
+
+.tabs button.activeTab{
+background:#800020;
+}
+
 /* INPUT */
 input,select{
 width:100%;
@@ -201,11 +279,14 @@ margin:auto;
 <!-- HERO -->
 <section class="hero">
 
-<div class="hero-content">
+<div class="hero-text">
 <h1>YujayGlobal</h1>
 <p>Crafting Luxury Gele for Queens</p>
-
 <button class="btn" onclick="location.href='shop.html'">Explore Collection</button>
+</div>
+
+<div class="hero-image">
+<img src="IG Profile pic.jpg" alt="YujayGlobal">
 </div>
 
 </section>
@@ -244,22 +325,25 @@ style="float:right;background:none;border:none;color:#994e4e;font-size:20px;curs
 </button>
 
 <div class="tabs">
-<button onclick="showCart()">Cart</button>
-<button onclick="showWishlist()">Wishlist</button>
+<button onclick="showWishlist()" class="activeTab" id="wishlistTab">Wishlist ❤️</button>
+<button onclick="showCart()" id="cartTab">Cart 🛒</button>
 </div>
 
-<div id="cartSection">
+<!-- WISHLIST FIRST -->
+<div id="wishlistSection">
+<h3 style="font-weight:bold;">Wishlist ❤️</h3>
+<div id="wishlistItems"></div>
+</div>
+
+<!-- CART -->
+<div id="cartSection" style="display:none;">
 <h3>Your Cart</h3>
 <div id="cartItems"></div>
 <div id="total"></div>
 <button onclick="checkout()">Checkout</button>
 </div>
 
-<div id="wishlistSection" style="display:none;">
-<h3>Your Wishlist</h3>
-<div id="wishlistItems"></div>
 </div>
-
 </div>
 
 <!-- GENERAL REVIEWS -->
@@ -295,21 +379,33 @@ style="float:right;background:none;border:none;color:#994e4e;font-size:20px;curs
 let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
+/* RUN ON PAGE LOAD */
 document.addEventListener("DOMContentLoaded", function(){
 updateCart();
+updateWishlist();
 });
 
-/* CART TOGGLE */
+/* ================= CART ================= */
+
+/* TOGGLE CART */
 function toggleCart(){
 document.getElementById('cartPopup').classList.toggle('active');
 }
 
 /* ADD TO CART */
-function addToCart(name,price){
-cart.push({name,price});
-updateCart();
-}
+function addToCart(name, price){
 
+cart.push({
+name,
+price,
+color: "Not specified",
+shawl: false,
+cap: false
+});
+
+updateCart();
+showPopup(name + " added to cart 🛒");
+}
 
 /* REMOVE ITEM */
 function removeItem(index){
@@ -342,10 +438,8 @@ total += item.price;
 
 });
 
-
 /* DISCOUNT */
 let discount = 0;
-
 if(cart.length >= 5){
 discount = total * 0.15;
 }
@@ -361,12 +455,13 @@ Discount: ₦${discount}<br>
 <strong>Total: ₦${finalTotal}</strong>
 `;
 
-/* SAVE (VERY IMPORTANT) */
+/* SAVE */
 localStorage.setItem("cart", JSON.stringify(cart));
 }
 
 /* CHECKOUT */
 function checkout(){
+
 let total = 0;
 
 cart.forEach(item=>{
@@ -376,6 +471,7 @@ total += item.price;
 if(cart.length >= 5){
 total = total * 0.85;
 }
+
 let orderID='YUJAY-'+Math.floor(Math.random()*1000000);
 
 let handler=PaystackPop.setup({
@@ -387,25 +483,17 @@ let msg=`Order ID: ${orderID}%0ATotal: ₦${total}`;
 window.open(`https://wa.me/2348109000638?text=${msg}`);
 }
 });
+
 handler.openIframe();
 }
 
-/* WISHLIST */
+/* ================= WISHLIST ================= */
+
 function addWishlist(name){
 wishlist.push(name);
 localStorage.setItem("wishlist", JSON.stringify(wishlist));
-showPopup(name + " added to wishlist ❤️");
 updateWishlist();
-}
-
-function showCart(){
-document.getElementById('cartSection').style.display = "block";
-document.getElementById('wishlistSection').style.display = "none";
-}
-
-function showWishlist(){
-document.getElementById('cartSection').style.display = "none";
-document.getElementById('wishlistSection').style.display = "block";
+showPopup(name + " added to wishlist ❤️");
 }
 
 function updateWishlist(){
@@ -425,6 +513,7 @@ ${item}
 
 document.getElementById('wishlistItems').innerHTML = html;
 
+/* SAVE AGAIN */
 localStorage.setItem("wishlist", JSON.stringify(wishlist));
 }
 
@@ -434,26 +523,77 @@ let item = wishlist[index];
 
 cart.push({
 name:item,
-price:20000 // default (we'll improve later)
+price:20000
 });
 
 wishlist.splice(index,1);
 
 updateCart();
 updateWishlist();
-}  
+showPopup(item + " moved to cart 🛒");
+}
 
 function removeWishlist(index){
 wishlist.splice(index,1);
 updateWishlist();
 }
 
-window.onload = function(){
-updateCart();
-updateWishlist();
+function showWishlist(){
+
+document.getElementById('wishlistSection').style.display = "block";
+document.getElementById('cartSection').style.display = "none";
+
+document.getElementById('wishlistTab').classList.add("activeTab");
+document.getElementById('cartTab').classList.remove("activeTab");
 }
 
+function showCart(){
+
+document.getElementById('wishlistSection').style.display = "none";
+document.getElementById('cartSection').style.display = "block";
+
+document.getElementById('cartTab').classList.add("activeTab");
+document.getElementById('wishlistTab').classList.remove("activeTab");
+}
+
+/* ================= POPUP ================= */
+
+function showPopup(message){
+
+let popup = document.getElementById("popup");
+
+popup.innerText = message;
+popup.classList.add("show");
+
+setTimeout(()=>{
+popup.classList.remove("show");
+}, 2000);
+}
+
+/* ================= BOOKING ================= */
+
+function payBooking(){
+let email=document.getElementById('email').value;
+let service=document.getElementById('service').value;
+let qty=document.getElementById('qty').value||1;
+
+let total=service*qty;
+let deposit=total*0.4;
+
+let handler=PaystackPop.setup({
+key:'pk_test_dd359cd0443fe7a61cbda1da3a94e31aa6e22fda',
+email:email,
+amount:deposit*100,
+callback:function(){
+alert('Booking confirmed!');
+}
+});
+
+handler.openIframe();
+}
 </script>
+
+<div id="popup"></div>
 
 </body>
 </html>
